@@ -62,57 +62,82 @@ class Cluster:
 			it = it + 1									 # Ai não precisa chamar a função len toda hora
 
 		self.centroide = novoCentroide
-
+		return novoCentroide
 
 
 def k_medias(listaClusters):
 
+	objetos = []
+	centroides = [0, 0] # Tem que mudar isso obviamente
 	clustersMudaram = True
+	indice = 0
+	i = 0
 
-	#enquanto algum clusters ainda tiverem mudanças
-	while clustersMudaram:
-		objetos = []
-
-		# Atualiza os centroides dos clusters e coloca todos os objetos dos clusters em uma lista de objetos
-		for cl in listaClusters:
-			cl.calculaCentroide()
+	for cl in listaClusters:
+		centroides[i] = cl.calculaCentroide()
 			
-			while cl.objetos:
-				objetos.append(cl.objetos.pop())
+		while cl.objetos:
+			objetos.append(cl.objetos.pop())
+
+		i = i+1
+
+	#enquanto algum cluster ainda tiver sofrido mudança
+	while clustersMudaram:
 
 		# Para cada objeto
 		for obj in objetos:
 
 			# Acha o centroide mais próximo a ele
-			obj.centroideMaisProximo(listaClusters)
+			indice = obj.centroideMaisProximo(listaClusters)
 
 			# Adiciona ele ao cluster mais próximo
- 
-			# Se o novo cluster for diferente do antigo, houve uma mudança
-			clustersMudaram = False
+			listaClusters[indice].objetos.append(obj)
 
-		# Deleta os clusters antigos
+			# Eliminar centroides sem objetos...? talvez tirar eles do cálculo na distância euclidiana?
+
+		objetos = []
+		clustersMudaram = False
+		i = 0
+
+		for cl in listaClusters:
+			temp = cl.calculaCentroide()
+
+			if temp != centroides[i]:
+				clustersMudaram = True
+
+			centroides[i] = temp
+		
+			if clustersMudaram:
+				while cl.objetos:
+					objetos.append(cl.objetos.pop())
+
+			i = i+1
+
+		for cl in listaClusters:
+			print("Novo cluster: ")
+				for obj in cl.objetos:
+					print(obj.coordenadas)
 
 ####################################################################
 ############################	MAIN	############################
 ####################################################################
 
-obj1 = Objeto([1, 2, 3])
-obj2 = Objeto([4, 5, 6])
-obj3 = Objeto([7, 8, 9])
-obj4 = Objeto([10, 13, 15])
-obj5 = Objeto([12, 14, 16])
-obj6 = Objeto([17, 18, 19])
+objA = Objeto([1.5, 6])
+objB = Objeto([2, 5])
+objC = Objeto([2.5, 4])
+objD = Objeto([3, 3.5])
+objE = Objeto([3, 2])
+objF = Objeto([2.5, 2])
 
-cl = Cluster(3)
-cl.adicionaObjeto(obj1)
-cl.adicionaObjeto(obj2)
-cl.adicionaObjeto(obj3)
+cl = Cluster(2)
+cl.adicionaObjeto(objA)
+cl.adicionaObjeto(objB)
 
-cl2 = Cluster(3)
-cl2.adicionaObjeto(obj4)
-cl2.adicionaObjeto(obj5)
-cl2.adicionaObjeto(obj6)
+cl2 = Cluster(2)
+cl.adicionaObjeto(objC)
+cl2.adicionaObjeto(objD)
+cl2.adicionaObjeto(objE)
+cl2.adicionaObjeto(objF)
 
 # cl.calculaCentroide()
 # print(cl.centroide)
