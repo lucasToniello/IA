@@ -2,13 +2,14 @@
 ###################    Algoritmo k-médias	########################
 ####################################################################
 import math
+import random
 
 class Objeto:
 
 	# Parâmetros: lista de coordenadas
-	def __init__(self, coordenadas):
+	def __init__(self, nome, coordenadas):
 
-		# self.nome = nome
+		self.nome = nome
 		self.coordenadas = coordenadas
 
 	# calcula a distância euclidiana do objeto até um centroide -- Parâmetros: centroide
@@ -62,27 +63,24 @@ class Cluster:
 			it = it + 1									 # Ai não precisa chamar a função len toda hora
 
 		self.centroide = novoCentroide
-		return novoCentroide
+		# print(novoCentroide)
 
 
-def k_medias(listaClusters):
+def k_medias(objetos, numClusters, iteracoes):
 
-	objetos = []
-	centroides = [0, 0] # Tem que mudar isso obviamente
-	clustersMudaram = True
 	indice = 0
-	i = 0
+	listaClusters = []
 
-	for cl in listaClusters:
-		centroides[i] = cl.calculaCentroide()
-			
-		while cl.objetos:
-			objetos.append(cl.objetos.pop())
+	# Inicia a lista de clusters, gerando aleatóriamente seus centroides
+	for i in range(0, numClusters):
 
-		i = i+1
+		# Escolhemos aleatóriamente seu centroide (garantir que não é igual a nenhum dos outros)
+		indiceCentroide = random.randint(0, len(objetos) - 1)
+		listaClusters.append(Cluster(2))
+		listaClusters[i].centroide = objetos[indiceCentroide].coordenadas
+		print(listaClusters[i].centroide)
 
-	#enquanto algum cluster ainda tiver sofrido mudança
-	while clustersMudaram:
+	while iteracoes:
 
 		# Para cada objeto
 		for obj in objetos:
@@ -91,68 +89,41 @@ def k_medias(listaClusters):
 			indice = obj.centroideMaisProximo(listaClusters)
 
 			# Adiciona ele ao cluster mais próximo
-			listaClusters[indice].objetos.append(obj)
-
-			# Eliminar centroides sem objetos...? talvez tirar eles do cálculo na distância euclidiana?
-
-		objetos = []
-		clustersMudaram = False
-		i = 0
-
-		for cl in listaClusters:
-			temp = cl.calculaCentroide()
-
-			if temp != centroides[i]:
-				clustersMudaram = True
-
-			centroides[i] = temp
-		
-			if clustersMudaram:
-				while cl.objetos:
-					objetos.append(cl.objetos.pop())
-
-			i = i+1
+			listaClusters[indice].adicionaObjeto(obj)
 
 		for cl in listaClusters:
 			print("Novo cluster: ")
-				for obj in cl.objetos:
-					print(obj.coordenadas)
+			for obj in cl.objetos:
+				print("{} - {}" .format(obj.nome, obj.coordenadas))
+
+		iteracoes = iteracoes-1
+		objetos = []
+
+		for cl in listaClusters:
+			cl.calculaCentroide()
+			
+			while cl.objetos:
+				objetos.append(cl.objetos.pop(0))
+
+		print("\n\n")
 
 ####################################################################
 ############################	MAIN	############################
 ####################################################################
 
-objA = Objeto([1.5, 6])
-objB = Objeto([2, 5])
-objC = Objeto([2.5, 4])
-objD = Objeto([3, 3.5])
-objE = Objeto([3, 2])
-objF = Objeto([2.5, 2])
+F = open("../teste.txt", "r")
+string = " "
+objetos = []
 
-cl = Cluster(2)
-cl.adicionaObjeto(objA)
-cl.adicionaObjeto(objB)
+F.readline()
+string = F.readline()
 
-cl2 = Cluster(2)
-cl.adicionaObjeto(objC)
-cl2.adicionaObjeto(objD)
-cl2.adicionaObjeto(objE)
-cl2.adicionaObjeto(objF)
+while string != "":
+	valores = string.split("\t");
+	objetos.append(Objeto(valores[0], [float(valores[1]), float(valores[2])]))
+	string = F.readline()
 
-# cl.calculaCentroide()
-# print(cl.centroide)
+for obj in objetos:
+	print("{} - {}" .format(obj.nome, obj.coordenadas))
 
-# cl2.calculaCentroide()
-# print(cl2.centroide)
-
-# cl.adicionaObjeto(obj4)
-# cl.adicionaObjeto(obj5)
-# cl.adicionaObjeto(obj6)
-# cl.calculaCentroide()
-# print(cl.centroide)
-
-listaClusters = []
-listaClusters.append(cl)
-listaClusters.append(cl2)
-
-k_medias(listaClusters)
+k_medias(objetos, 2, 3)
