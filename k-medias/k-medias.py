@@ -65,9 +65,9 @@ class Cluster:
 		self.centroide = novoCentroide
 		# print(novoCentroide)
 
-
 def k_medias(objetos, numClusters, iteracoes):
 
+	i = 0
 	indice = 0
 	listaClusters = []
 
@@ -78,7 +78,7 @@ def k_medias(objetos, numClusters, iteracoes):
 		indiceCentroide = random.randint(0, len(objetos) - 1)
 		listaClusters.append(Cluster(2))
 		listaClusters[i].centroide = objetos[indiceCentroide].coordenadas
-		print(listaClusters[i].centroide)
+		# print(listaClusters[i].centroide)
 
 	while iteracoes:
 
@@ -91,27 +91,38 @@ def k_medias(objetos, numClusters, iteracoes):
 			# Adiciona ele ao cluster mais próximo
 			listaClusters[indice].adicionaObjeto(obj)
 
-		for cl in listaClusters:
-			print("Novo cluster: ")
-			for obj in cl.objetos:
-				print("{} - {}" .format(obj.nome, obj.coordenadas))
-
 		iteracoes = iteracoes-1
 		objetos = []
 
-		for cl in listaClusters:
-			cl.calculaCentroide()
-			
-			while cl.objetos:
-				objetos.append(cl.objetos.pop(0))
+		if iteracoes:
+			for cl in listaClusters:
+				cl.calculaCentroide()
+				
+				while cl.objetos:
+					objetos.append(cl.objetos.pop(0))
 
-		print("\n\n")
+	return listaClusters
+
+	# for cl in listaClusters:
+		# print("\nCluster {}, {} objetos: " .format(i+1, len(cl.objetos)))
+		# cl.objetos.sort(key = lambda x: x.nome)
+
+		# for obj in cl.objetos:
+			# print("{} - {}" .format(obj.nome, obj.coordenadas))
+
+		# i = i+1
+
+	
 
 ####################################################################
 ############################	MAIN	############################
 ####################################################################
 
-F = open("../teste.txt", "r")
+nomeArquivo = input()
+numClusters = (int)(input())
+iteracoes = (int)(input())
+
+F = open(nomeArquivo, "r")
 string = " "
 objetos = []
 
@@ -120,10 +131,15 @@ string = F.readline()
 
 while string != "":
 	valores = string.split("\t");
-	objetos.append(Objeto(valores[0], [float(valores[1]), float(valores[2])]))
+	objetos.append(Objeto(str((valores[0])), [float(valores[1]), float(valores[2])]))
 	string = F.readline()
 
-for obj in objetos:
-	print("{} - {}" .format(obj.nome, obj.coordenadas))
+listaClusters = k_medias(objetos, numClusters, iteracoes)
 
-k_medias(objetos, 2, 3)
+for cl in listaClusters:
+	cl.objetos.sort(key = lambda x: x.nome)
+
+	for obj in cl.objetos:
+		print(obj.coordenadas)
+
+	print("\n\n\n")
