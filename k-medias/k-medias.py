@@ -63,7 +63,6 @@ class Cluster:
 			it = it + 1									 # Ai não precisa chamar a função len toda hora
 
 		self.centroide = novoCentroide
-		# print(novoCentroide)
 
 def k_medias(objetos, numClusters, iteracoes):
 
@@ -78,7 +77,6 @@ def k_medias(objetos, numClusters, iteracoes):
 		indiceCentroide = random.randint(0, len(objetos) - 1)
 		listaClusters.append(Cluster(2))
 		listaClusters[i].centroide = objetos[indiceCentroide].coordenadas
-		# print(listaClusters[i].centroide)
 
 	while iteracoes:
 
@@ -103,17 +101,6 @@ def k_medias(objetos, numClusters, iteracoes):
 
 	return listaClusters
 
-	# for cl in listaClusters:
-		# print("\nCluster {}, {} objetos: " .format(i+1, len(cl.objetos)))
-		# cl.objetos.sort(key = lambda x: x.nome)
-
-		# for obj in cl.objetos:
-			# print("{} - {}" .format(obj.nome, obj.coordenadas))
-
-		# i = i+1
-
-	
-
 ####################################################################
 ############################	MAIN	############################
 ####################################################################
@@ -122,9 +109,9 @@ nomeArquivo = input()
 numClusters = (int)(input())
 iteracoes = (int)(input())
 
-F = open(nomeArquivo, "r")
 string = " "
 objetos = []
+F = open(nomeArquivo, "r")
 
 F.readline()
 string = F.readline()
@@ -136,10 +123,11 @@ while string != "":
 
 listaClusters = k_medias(objetos, numClusters, iteracoes)
 
+print("sample label\td1\td2")
 for cl in listaClusters:
 	cl.objetos.sort(key = lambda x: x.nome)
 
 	for obj in cl.objetos:
-		print(obj.coordenadas)
+		print("{}\t{:.8f}\t{:.8f}" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
 
 	print("\n\n\n")
