@@ -76,7 +76,7 @@ def k_medias(objetos, numClusters, iteracoes):
 		# Escolhemos aleatóriamente seu centroide (garantir que não é igual a nenhum dos outros)
 		indiceCentroide = random.randint(0, len(objetos) - 1)
 		listaClusters.append(Cluster(2))
-		listaClusters[i].centroide = objetos[indiceCentroide].coordenadas
+		listaClusters[i].centroide = objetos[indiceCentroide].numCoordenadas
 
 	while iteracoes:
 
@@ -130,4 +130,4 @@ for cl in listaClusters:
 	for obj in cl.objetos:
 		print("{}\t{:.8f}\t{:.8f}" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
 
-	print("\n\n\n")
+	print("\n")
