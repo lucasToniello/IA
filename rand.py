@@ -60,10 +60,6 @@ def adjustedRandIndex(listaReais, listaResultados, numClusters):
 
 	ARI = somaGeral - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
 	ARI /= (0.5*(somaLinhas+somaColunas)) - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
-
-	print(somaGeral)
-	print(somaLinhas)
-	print(somaColunas)
 	
 	for i in matrizConfusao:
 		for j in i:
@@ -93,8 +89,6 @@ def leArquivo(F):
 listaReais = []
 listaResultados = []
 
-# arquivoReais = input()
-# arquivoResultados = input()
 numClusters = (int)(input())
 
 F = open("k-medias/saidas/saida_monkey_8cl.clu", "r")

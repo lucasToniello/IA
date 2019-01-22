@@ -131,3 +131,5 @@ for cl in listaClusters:
 		print("{}\t{:.8f}\t{:.8f}" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
 
 	print("\n")
+
+f.close()
