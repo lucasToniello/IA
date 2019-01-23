@@ -40,7 +40,7 @@ def adjustedRandIndex(listaReais, listaResultados, numClusters):
 		# E adiciona um valor na matriz de confusão com base na comparação do cluster esperado e achado
 		matrizConfusao[lreais.clusterOrigem-1][indice-1] += 1
 
-	# Calcula o ARI com base na matriz de 
+	# Calcula o ARI com base na matriz de confusão
 	somaGeral = 0
 	somaLinhas = 0
 	somaColunas = 0
@@ -91,10 +91,13 @@ listaResultados = []
 
 numClusters = (int)(input())
 
-F = open("k-medias/saidas/saida_monkey_8cl.clu", "r")
+F = open("average-link/saidas/saida_monkey.clu", "r")
 F2 = open("datasets/monkeyReal1.clu", "r")
 
 listaReais = leArquivo(F)
 listaResultados = leArquivo(F2)
 
 print(adjustedRandIndex(listaReais, listaResultados, numClusters))
+
+F.close()
+F2.close()

@@ -1,6 +1,6 @@
 string = input()
 
-while string != "penis":
+while 1:
 
 	if string:
 		valores = string.split(" ")

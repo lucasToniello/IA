@@ -11,9 +11,7 @@
 	- git add -A
 	- git commit -m "mensagem sobre suas alterações"
 	- git push
-	obs: vamo tentar fazer umas mensagem séria
 
 #Como dar pull (pegar a versão mais atual do trab):
 	- vai na pasta onde está o repositório no seu PC
 	- git pull
-	obs: muito foda 																												  
