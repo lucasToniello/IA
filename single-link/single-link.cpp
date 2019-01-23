@@ -28,7 +28,7 @@ double distanciaEuclidiana(cluster c1, cluster c2){
 			if(d < menorDist)
 				menorDist = d;
 		}
-	}
+	} 
 	return sqrt(menorDist); 
 }
 
