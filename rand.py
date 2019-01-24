@@ -6,6 +6,7 @@ class Objeto:
 		self.nome = nome
 		self.clusterOrigem = clusterOrigem
 
+# Calcula combinação linear entre n e p
 def combinacaoLinear(n, p):
 
 	if n > 1: 
@@ -14,6 +15,7 @@ def combinacaoLinear(n, p):
 	else:
 		return 0
 
+# Acha o objeto correspondente na lista de resultados
 def achaObjetoCorrespondente(obj, listaResultados):
 
 	for lResultados in listaResultados:
@@ -61,13 +63,16 @@ def adjustedRandIndex(listaReais, listaResultados, numClusters):
 	ARI = somaGeral - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
 	ARI /= (0.5*(somaLinhas+somaColunas)) - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
 	
+	# Printa a matriz de confusão
 	for i in matrizConfusao:
 		for j in i:
 			print(j, end=" ")
 		print("\n")
 
+	# E retorna o índice rand ajustado
 	return ARI
 
+# Lê um arquivo com os objetos: seu nome mais suas coordenadas
 def leArquivo(F):
 
 	string = " "
@@ -89,10 +94,13 @@ def leArquivo(F):
 listaReais = []
 listaResultados = []
 
+# Entradas: número de clusters dos arquivos mais seus nomes
 numClusters = (int)(input())
+arquivoReal = input()
+arquivoResultados = input()
 
-F = open("average-link/saidas/saida_monkey.clu", "r")
-F2 = open("datasets/monkeyReal1.clu", "r")
+F = open(arquivoReal, "r")
+F2 = open(arquivoResultados, "r")
 
 listaReais = leArquivo(F)
 listaResultados = leArquivo(F2)
