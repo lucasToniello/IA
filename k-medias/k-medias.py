@@ -1,8 +1,10 @@
 ####################################################################
 ###################    Algoritmo k-médias	########################
 ####################################################################
+import os
 import math
 import random
+import matplotlib.pyplot as plt
 
 class Objeto:
 
@@ -74,7 +76,7 @@ def k_medias(objetos, numClusters, iteracoes):
 		# Escolhemos aleatóriamente seu centroide
 		indiceCentroide = random.randint(0, len(objetos) - 1)
 		listaClusters.append(Cluster(2))
-		listaClusters[i].centroide = objetos[indiceCentroide].numCoordenadas
+		listaClusters[i].centroide = objetos[indiceCentroide].coordenadas
 
 	while iteracoes:
 
@@ -107,14 +109,17 @@ def k_medias(objetos, numClusters, iteracoes):
 ############################	MAIN	############################
 ####################################################################
 
-nomeArquivo = input()
-numClusters = (int)(input())
-iteracoes = (int)(input())
+nomeArquivo = input("Nome do arquivo de entrada: ")
+nomeArquivoSaida = input("Nome do arquivo de saída: ")
+numClusters = (int)(input("Número de clusters: "))
+iteracoes = (int)(input("Número de iterações: "))
 
 string = " "
 objetos = []
-F = open(nomeArquivo, "r")
+dirSaidas = "saidas"
+dirImagens = "imagens"
 
+F = open(nomeArquivo, "r")
 F.readline()
 string = F.readline()
 
@@ -124,19 +129,40 @@ while string != "":
 	objetos.append(Objeto(str((valores[0])), [float(valores[1]), float(valores[2])]))
 	string = F.readline()
 
+F.close()
+
 # Executa o algoritmo k-medias
 listaClusters = k_medias(objetos, numClusters, iteracoes)
 
+plt.title("Gráfico")
+plt.xlabel("Eixo x")
+plt.ylabel("Eixo y")
+
+if not os.path.exists(dirSaidas):
+    os.mkdir(dirSaidas)
+
+if not os.path.exists(dirImagens):
+	os.mkdir(dirImagens)
+
+Fsaida = open(dirSaidas + "/" + nomeArquivoSaida + ".ods", "w")
+
 # E então printa sua saída de acordo com o arquivo padrão
-print("sample label\td1\td2")
+Fsaida.write("sample label\td1\td2\n")
 for cl in listaClusters:
+	x = []
+	y = []
+	
 	# Para simplificar a visualização, ordenamos os objetos do cluster por ordem alfabética
 	cl.objetos.sort(key = lambda x: x.nome)
 
 	for obj in cl.objetos:
-		print("{}\t{:.8f}\t{:.8f}" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
+		x.append(obj.coordenadas[0])
+		y.append(obj.coordenadas[1])
+		Fsaida.write("{}\t{:.8f}\t{:.8f}\n" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
+
+	plt.scatter(x, y)
 
 	# Quebra de linha para separar os clusters
-	print("\n")
+	Fsaida.write("\n")
 
-f.close()
+plt.savefig(dirImagens + "/" + nomeArquivoSaida + ".png")
