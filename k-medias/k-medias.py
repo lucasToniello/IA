@@ -1,16 +1,18 @@
 ####################################################################
 ###################    Algoritmo k-médias	########################
 ####################################################################
-import os
+import sys
 import math
 import random
-import matplotlib.pyplot as plt
+
+sys.path.insert(1, '../')
+
+from util import plot, salvar
 
 class Objeto:
 
-	# Parâmetros: lista de coordenadas
+	# Parâmetros: nome, lista de coordenadas
 	def __init__(self, nome, coordenadas):
-
 		self.nome = nome
 		self.coordenadas = coordenadas
 
@@ -25,7 +27,6 @@ class Objeto:
 
 	# retorna o índice do centróide mais próximo ao objeto -- Parâmetros: lista de clusters
 	def centroideMaisProximo(self, clusters):
-
 		menor = self.distanciaEuclidiana(clusters[0].centroide)
 		indice = 0
 
@@ -65,7 +66,7 @@ class Cluster:
 		self.centroide = novoCentroide
 
 def k_medias(objetos, numClusters, iteracoes):
-
+	
 	i = 0
 	indice = 0
 	listaClusters = []
@@ -111,58 +112,23 @@ def k_medias(objetos, numClusters, iteracoes):
 
 nomeArquivo = input("Nome do arquivo de entrada: ")
 nomeArquivoSaida = input("Nome do arquivo de saída: ")
-numClusters = (int)(input("Número de clusters: "))
-iteracoes = (int)(input("Número de iterações: "))
-
-string = " "
+numClusters = int(input("Número de clusters: "))
+iteracoes = int(input("Número de iterações: "))
 objetos = []
-dirSaidas = "saidas"
-dirImagens = "imagens"
 
 F = open(nomeArquivo, "r")
 F.readline()
-string = F.readline()
+linha = F.readline()
 
 # Lê um arquivo de entrada contendo o nome do objeto e suas coordenadas
-while string != "":
-	valores = string.split("\t");
+while linha != "":
+	valores = linha.split("\t");
 	objetos.append(Objeto(str((valores[0])), [float(valores[1]), float(valores[2])]))
-	string = F.readline()
+	linha = F.readline()
 
 F.close()
 
-# Executa o algoritmo k-medias
 listaClusters = k_medias(objetos, numClusters, iteracoes)
 
-plt.title("Gráfico")
-plt.xlabel("Eixo x")
-plt.ylabel("Eixo y")
-
-if not os.path.exists(dirSaidas):
-    os.mkdir(dirSaidas)
-
-if not os.path.exists(dirImagens):
-	os.mkdir(dirImagens)
-
-Fsaida = open(dirSaidas + "/" + nomeArquivoSaida + ".ods", "w")
-
-# E então printa sua saída de acordo com o arquivo padrão
-Fsaida.write("sample label\td1\td2\n")
-for cl in listaClusters:
-	x = []
-	y = []
-	
-	# Para simplificar a visualização, ordenamos os objetos do cluster por ordem alfabética
-	cl.objetos.sort(key = lambda x: x.nome)
-
-	for obj in cl.objetos:
-		x.append(obj.coordenadas[0])
-		y.append(obj.coordenadas[1])
-		Fsaida.write("{}\t{:.8f}\t{:.8f}\n" .format(obj.nome, obj.coordenadas[0], obj.coordenadas[1]))
-
-	plt.scatter(x, y)
-
-	# Quebra de linha para separar os clusters
-	Fsaida.write("\n")
-
-plt.savefig(dirImagens + "/" + nomeArquivoSaida + ".png")
+plot("imagens", nomeArquivoSaida, listaClusters)
+salvar("saidas", nomeArquivoSaida, listaClusters)
