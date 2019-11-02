@@ -45,12 +45,67 @@ def single_link(objetos, k_min, k_max):
 
 	numClusters = len(objetos)
 	distancias = []
+	objClusters = []
+	listaClusters = []
 
 	for i in range(0, numClusters):
 		objClusters.append({"status" : True, "origem" : i})
 
 		for j in range(i+1, numClusters):
 			distancias.append((i, j, objetos[i].distanciaEuclidiana(objetos[j])))
+
+	distancias.sort(key=lambda x: x[2])
+	
+	for obj in objetos:
+		listaClusters.append(Cluster([obj], 2))
+
+	i = 0
+
+	while numClusters > k_min:
+		print(numClusters)
+		d = distancias.pop(0)
+		obj1 = objClusters[d[0]]
+		obj2 = objClusters[d[1]]
+		
+		if obj1['status'] and obj2['status']:
+			listaClusters[obj1['origem']].adicionaObjeto(objetos[obj2['origem']])
+			listaClusters[obj2['origem']].apaga()
+			obj1['status'] = False
+			obj2['status'] = False
+			obj2['origem'] = obj1['origem']
+			numClusters = numClusters - 1
+
+		elif not obj1['status'] and obj2['status']:
+			listaClusters[obj1['origem']].adicionaObjeto(objetos[obj2['origem']])
+			listaClusters[obj2['origem']].apaga()
+			obj2['status'] = False
+			obj2['origem'] = obj1['origem']
+			numClusters = numClusters - 1
+
+		elif obj1['status'] and not obj2['status']:
+			listaClusters[obj2['origem']].adicionaObjeto(objetos[obj1['origem']])
+			listaClusters[obj1['origem']].apaga()
+			obj1['status'] = False
+			obj1['origem'] = obj2['origem']	
+			numClusters = numClusters - 1
+
+		else:
+			if obj1['origem'] != obj2['origem'] and listaClusters[obj1['origem']].objetos and listaClusters[obj2['origem']].objetos:
+				for cl in listaClusters[obj2['origem']].objetos:
+					listaClusters[obj1['origem']].adicionaObjeto(cl)
+					cl['origem'] = obj1['origem']
+
+				listaClusters[obj2['origem']].apaga()
+				numClusters = numClusters - 1
+
+	lista = []
+
+	# organiza a lista de clusters (apaga os clusters vazios)
+	for cl in listaClusters:
+		if cl.objetos:
+			lista.append(cl)
+
+	del(listaClusters)
 
 	return lista
 
@@ -77,7 +132,6 @@ while string != "":
 F.close()
 
 listaClusters = single_link(objetos, k_min, k_max)
-listaClusters = single_link(objetos, k_min, k_max)
 
-plot("graficos", nomeArquivoSaida, listaClusters)
+plot("imagens", nomeArquivoSaida, listaClusters)
 salvar("saidas", nomeArquivoSaida, listaClusters)

@@ -130,5 +130,5 @@ F.close()
 
 listaClusters = k_medias(objetos, numClusters, iteracoes)
 
-plot("imagens", nomeArquivoSaida, listaClusters)
+plot("graficos", nomeArquivoSaida, listaClusters)
 salvar("saidas", nomeArquivoSaida, listaClusters)
