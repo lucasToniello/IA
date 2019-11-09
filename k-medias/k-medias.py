@@ -60,8 +60,8 @@ class Cluster:
 			for obj in self.objetos:
 				soma += obj.coordenadas[it]
 
-			novoCentroide.append(soma/len(self.objetos)) # Criar uma variável para o número de objetos?
-			it = it + 1									 # Ai não precisa chamar a função len toda hora
+			novoCentroide.append(soma/len(self.objetos))
+			it = it + 1									
 
 		self.centroide = novoCentroide
 

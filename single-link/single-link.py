@@ -16,7 +16,8 @@ class Objeto:
 		self.nome = nome
 		self.coordenadas = coordenadas
 
-	# calcula a distância euclidiana do objeto até outro objeto
+	# calcula a distância euclidiana do objeto até outro objeto (obs: eles devem possuir o mesmo número de coordenadas)
+	# Fazer uma exceção pra caso não tenham???
 	def distanciaEuclidiana(self, objeto):
 		soma = 0
 		
@@ -27,7 +28,7 @@ class Objeto:
 
 class Cluster:
 
-	def __init__(self, objetos, numCoordenadas):
+	def __init__(self, numCoordenadas, objetos=[]):
 		self.objetos = objetos
 		self.numCoordenadas = numCoordenadas
 
@@ -41,28 +42,46 @@ class Cluster:
 	def apaga(self):
 		self.objetos.clear()
 
-def single_link(objetos, k_min, k_max):
+def single_link(listaClusters, k_min, k_max):
 
-	numClusters = len(objetos)
-	distancias = []
+	numClusters = len(listaClusters)
 
-	for i in range(0, numClusters):
-		objClusters.append({"status" : True, "origem" : i})
+	# Enquanto o número de clusters for maior que o k_min
+	while numClusters > k_min:
 
-		for j in range(i+1, numClusters):
-			distancias.append((i, j, objetos[i].distanciaEuclidiana(objetos[j])))
+		menor = (2**32) - 1
 
-	return lista
+		# Calcula todas as distâncias e acha a menor
+		for i in range(0, numClusters):
+			for objA in listaClusters[i].objetos:
+				
+				for j in range(i+1, numClusters):
+					for objB in listaClusters[j].objetos:
+						
+						dist = objA.distanciaEuclidiana(objB)
+						if dist < menor:
+							menor = dist
+							min_indice = i
+							max_indice = j
+
+		# Agora, devemos "linkar" os clusters, passando todos os clusters de um para o outro e eliminando o que ficou sem clusters
+		listaClusters[min_indice].adicionaCluster(listaClusters[max_indice])
+		listaClusters.pop(max_indice)
+
+		numClusters = numClusters - 1
+
+	return listaClusters # Tem que mudar isso pra uma lista
 
 ####################################################################
 ############################	MAIN	############################
 ####################################################################
 
-nomeArquivo = input("Nome do arquivo de entrada: ")
-nomeArquivoSaida = input("Nome do arquivo de saída: ")
-k_min = int(input("Número do kmin: "))
-k_max = int(input("Número do kmax: "))
-objetos = []
+# input("Nome do arquivo de entrada: ")
+nomeArquivo = sys.argv[1]
+nomeArquivoSaida = sys.argv[2]
+k_min = int(sys.argv[3])
+k_max = int(sys.argv[4])
+listaClusters = []
 
 F = open(nomeArquivo, "r")
 F.readline()
@@ -71,13 +90,12 @@ string = F.readline()
 # Lê um arquivo de entrada contendo o nome do objeto e suas coordenadas
 while string != "":
 	valores = string.split("\t");
-	objetos.append(Objeto(str((valores[0])), [float(valores[1]), float(valores[2])]))
+	listaClusters.append(Cluster(2, [Objeto(str((valores[0])), [float(valores[1]), float(valores[2])])]))
 	string = F.readline()
 
 F.close()
 
-listaClusters = single_link(objetos, k_min, k_max)
-listaClusters = single_link(objetos, k_min, k_max)
+listaClusters = single_link(listaClusters, k_min, k_max)
 
 plot("graficos", nomeArquivoSaida, listaClusters)
 salvar("saidas", nomeArquivoSaida, listaClusters)
