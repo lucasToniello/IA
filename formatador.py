@@ -2,17 +2,19 @@
 ############################	MAIN	############################
 ####################################################################
 
+import sys
+
 cluster = 0
 string = " "
 objetos = []
 valores = []
 
-nomeArquivo = input("Nome do arquivo(sem txt): ")
+nomeArquivo = sys.argv[1]
 print("Coloque a ordem dos clusters: ")
 cluster = input("Próximo cluster: ")
 
 # Entradas: nome do arquivo de saída(gerado pelo algoritmo), mais o nome onde será salvo o arquivo .clu
-F = open(nomeArquivo + ".txt", "r")
+F = open(nomeArquivo + ".ods", "r")
 Fsaida = open(nomeArquivo + ".clu", "w")
 
 F.readline()
