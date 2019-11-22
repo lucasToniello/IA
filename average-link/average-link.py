@@ -8,9 +8,9 @@ import sys
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-#sys.path.insert(1, '../')
+sys.path.insert(1, '../')
 
-#from util import plot, salvar
+from util import plot, salvar
 
 class Objeto:
 
@@ -24,7 +24,10 @@ class Objeto:
         for i in range (0, len(self.coordenadas)):
             soma += math.pow((objeto.coordenadas[i] - self.coordenadas[i]), 2)
         
-        return math.sqrt(soma)
+        soma = math.sqrt(soma)
+        soma /= (len(objeto.coordenadas) * len(self.coordenadas))
+
+        return soma
 
 def buscarMenor(list):
     menor = (2**32) - 1
@@ -38,12 +41,6 @@ def buscarMenor(list):
     objMenor.append((x,y,menor))
     return objMenor
      
-# def ordenar(e):
-    # a = e[0] + e[1]
-    # return a
-def  listarObjetos(distancias,min_index,max_index):
-    
-    return listaClusters
 
 def calcularAverage(ObjA,ObjB):
     soma = 0
@@ -53,6 +50,7 @@ def calcularAverage(ObjA,ObjB):
         soma = (ObjA[i][2] + ObjB[i][2])/2
         listaClusters.append((ObjA[i][0], ObjA[i][1],soma))
     return listaClusters 
+
 def average_link(objetos,k_min,k_max):
 
     numClusters = len(objetos)
@@ -65,10 +63,7 @@ def average_link(objetos,k_min,k_max):
 
     while numClusters > k_min:
         
-        # print(distancias)
-        # print(len(distancias)) 
-        # print("\n")
-        print(numClusters)
+        
         pegarMenor = buscarMenor(distancias)
 
         #excluir o menor da distancia
@@ -95,19 +90,16 @@ def average_link(objetos,k_min,k_max):
         
         listaClusters = calcularAverage(ObjA,ObjB)
 
-        ini = time.time()
         for i in range (0,len(ObjA)):
             distancias.remove(ObjA[i])
             distancias.remove(ObjB[i])
         fim = time.time()
-        #print(f"tempo da funcao encontrar indice p remover",fim-ini)
-
+       
         distancias.extend(listaClusters) 
         listaClusters.clear()
-        #print(distancias)
+
         numClusters = numClusters - 1
     
-    #print(distancias)
     return distancias
 
 ####################################################################
@@ -134,18 +126,5 @@ F.close()
 
 listaClusters = average_link(objetos,k_min,k_max)
 
-X = np.array(listaClusters)
-
-resultimage_name = nomeArquivoSaida + ".png"
-
-plt.scatter(X[:, 0], X[:, 1] )
-plt.title(nomeArquivoSaida)
-plt.xlabel("Eixo x")
-plt.ylabel("Eixo y")
-#plt.legend(loc="lower left", fontsize="x-small")
-plt.savefig(resultimage_name)
-#nome = nomeArquivoSaida + "_" + str(j) + ".clu"
-
-
-#plot("graficos", nomeArquivoSaida, listaClusters)
-#salvar("saidas", nomeArquivoSaida, listaClusters)
+plot("graficos", nomeArquivoSaida, listaClusters)
+salvar("saidas", nomeArquivoSaida, listaClusters)
