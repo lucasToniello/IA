@@ -1,8 +1,9 @@
 import os
 import matplotlib.pyplot as plt
 
-def plot(dirImagens, nome, listaClusters):
+def plot(numGraficos, dirImagens, nome, listaClusters):
 	i = 1;
+	plt.figure(numGraficos)
 
 	if not os.path.exists(dirImagens):
 		os.mkdir(dirImagens)
@@ -25,7 +26,6 @@ def plot(dirImagens, nome, listaClusters):
 	plt.ylabel("Eixo y")
 	plt.legend(loc="lower left", fontsize="x-small")
 	plt.savefig(dirImagens + "/" + nome + ".png")
-
 
 def salvar(dirSaidas, nome, listaClusters):
 	if not os.path.exists(dirSaidas):

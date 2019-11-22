@@ -42,14 +42,16 @@ class Cluster:
 	def apaga(self):
 		self.objetos.clear()
 
-def single_link(listaClusters, k_min, k_max):
+def single_link(listaClusters, k_min, k_max, nomeArquivoSaida):
 
+	numGraficos = 0
 	numClusters = len(listaClusters)
 
 	# Enquanto o número de clusters for maior que o k_min
 	while numClusters > k_min:
 
 		menor = (2**32) - 1
+		soma = 0
 
 		# Calcula todas as distâncias e acha a menor
 		for i in range(0, numClusters):
@@ -59,16 +61,25 @@ def single_link(listaClusters, k_min, k_max):
 					for objB in listaClusters[j].objetos:
 						
 						dist = objA.distanciaEuclidiana(objB)
+						soma += 1
 						if dist < menor:
 							menor = dist
 							min_indice = i
 							max_indice = j
 
+		print(soma)
+
 		# Agora, devemos "linkar" os clusters, passando todos os clusters de um para o outro e eliminando o que ficou sem clusters
 		listaClusters[min_indice].adicionaCluster(listaClusters[max_indice])
 		listaClusters.pop(max_indice)
-
 		numClusters = numClusters - 1
+
+		if numClusters <= k_max:
+			numGraficos += 1
+			plot(numGraficos, "graficos", nomeArquivoSaida + str(numClusters), listaClusters)
+			salvar("saidas", nomeArquivoSaida + str(numClusters), listaClusters)
+
+		# print(numClusters)
 
 	return listaClusters # Tem que mudar isso pra uma lista
 
@@ -95,7 +106,4 @@ while string != "":
 
 F.close()
 
-listaClusters = single_link(listaClusters, k_min, k_max)
-
-plot("graficos", nomeArquivoSaida, listaClusters)
-salvar("saidas", nomeArquivoSaida, listaClusters)
+listaClusters = single_link(listaClusters, k_min, k_max, nomeArquivoSaida)

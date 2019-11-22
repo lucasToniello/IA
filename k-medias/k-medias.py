@@ -110,10 +110,10 @@ def k_medias(objetos, numClusters, iteracoes):
 ############################	MAIN	############################
 ####################################################################
 
-nomeArquivo = input("Nome do arquivo de entrada: ")
-nomeArquivoSaida = input("Nome do arquivo de saída: ")
-numClusters = int(input("Número de clusters: "))
-iteracoes = int(input("Número de iterações: "))
+nomeArquivo = sys.argv[1]
+nomeArquivoSaida = sys.argv[2]
+numClusters = int(sys.argv[3])
+iteracoes = int(sys.argv[4])
 objetos = []
 
 F = open(nomeArquivo, "r")
