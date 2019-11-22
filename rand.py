@@ -1,3 +1,4 @@
+import os
 import sys
 import math
 
@@ -26,7 +27,7 @@ def achaObjetoCorrespondente(obj, listaResultados):
 	# Só chega nessa parte caso o objeto não esteja na lista dos resultados
 	return 0
 
-def adjustedRandIndex(listaReais, listaResultados, numClusters):
+def adjustedRandIndex(saida, listaReais, listaResultados, numClusters):
 	indice = 0
 
 	# Inicializa a matriz de confusão
@@ -64,11 +65,22 @@ def adjustedRandIndex(listaReais, listaResultados, numClusters):
 	ARI = somaGeral - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
 	ARI /= (0.5*(somaLinhas+somaColunas)) - ((somaLinhas*somaColunas) / combinacaoLinear(len(listaReais), 2))
 	
+	if not os.path.exists("comparacoes"):
+		os.mkdir("comparacoes")
+
+	print("comparacoes/" + saida + ".ods")
+
+	FSaida = open("comparacoes/" + saida + ".ods", "w")
+	FSaida.write("Matriz de Confusão:\n")
+
 	# Printa a matriz de confusão
 	for i in matrizConfusao:
 		for j in i:
-			print(j, end=" ")
-		print("\n")
+			FSaida.write("{}\t" .format(j))
+		FSaida.write("\n")
+
+	FSaida.write("Índice RAND: {}" .format(ARI))
+	FSaida.close()
 
 	# E retorna o índice rand ajustado
 	return ARI
@@ -81,7 +93,6 @@ def leArquivo(F):
 	string = F.readline()
 
 	while string != "":
-
 		valores = string.split("\t")
 		lista.append(Objeto(valores[0], int(valores[1])))
 		string = F.readline()
@@ -99,6 +110,7 @@ listaResultados = []
 numClusters = int(sys.argv[1])
 arquivoReal = sys.argv[2]
 arquivoResultados = sys.argv[3]
+saida = sys.argv[4]
 
 F = open(arquivoReal, "r")
 F2 = open(arquivoResultados, "r")
@@ -106,7 +118,7 @@ F2 = open(arquivoResultados, "r")
 listaReais = leArquivo(F)
 listaResultados = leArquivo(F2)
 
-print(adjustedRandIndex(listaReais, listaResultados, numClusters))
-
 F.close()
 F2.close()
+
+print(adjustedRandIndex(saida, listaReais, listaResultados, numClusters))
