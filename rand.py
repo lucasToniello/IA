@@ -1,3 +1,4 @@
+import sys
 import math
 
 class Objeto:
@@ -95,9 +96,9 @@ listaReais = []
 listaResultados = []
 
 # Entradas: número de clusters dos arquivos mais seus nomes
-numClusters = (int)(input())
-arquivoReal = input()
-arquivoResultados = input()
+numClusters = int(sys.argv[1])
+arquivoReal = sys.argv[2]
+arquivoResultados = sys.argv[3]
 
 F = open(arquivoReal, "r")
 F2 = open(arquivoResultados, "r")
